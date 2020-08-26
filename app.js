@@ -26,9 +26,14 @@ app.post("/messages", function (req, res) {
 
 app.put("/messages/:id", function (req, res) {
     try {
-        message = msgs.find((elem) => elem.id == req.params.id);
-        message.msg = req.body.msg;
-        res.status(200).send(message);
+        if (req.body.msg) {
+            message = msgs.find((elem) => elem.id == req.params.id);
+            message.msg = req.body.msg;
+            res.status(200).send(message);
+        }
+        else {
+            res.status(400).send({ error: "The parameter is not correct" })
+        }
     } catch (error) {
         res.status(400).send({ error: "Invalid id" })
     }
