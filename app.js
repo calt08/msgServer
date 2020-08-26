@@ -14,21 +14,34 @@ app.get("/messages", function (req, res) {
 });
 
 app.post("/messages", function (req, res) {
-    message = { id: ++num, msg: req.body.msg };
-    msgs.push(message);
-    res.status(200).send(message);
+    if (req.body.msg) {
+        message = { id: ++num, msg: req.body.msg };
+        msgs.push(message);
+        res.status(200).send(message);
+    }
+    else {
+        res.status(400).send({ error: "The parameter is not correct" })
+    }
 });
 
 app.put("/messages/:id", function (req, res) {
-    message = msgs.find((elem) => elem.id == req.params.id);
-    message.msg = req.body.msg;
-    res.status(200).send(message);
+    try {
+        message = msgs.find((elem) => elem.id == req.params.id);
+        message.msg = req.body.msg;
+        res.status(200).send(message);
+    } catch (error) {
+        res.status(400).send({ error: "Invalid id" })
+    }
 });
 
 app.delete("/messages/:id", function (req, res) {
-    message = msgs.find((elem) => elem.id == req.params.id);
-    msgs.splice(msgs.indexOf(message), 1);
-    res.status(200).send(message);
+    try {
+        message = msgs.find((elem) => elem.id == req.params.id);
+        msgs.splice(msgs.indexOf(message), 1);
+        res.status(200).send(message);
+    } catch (error) {
+        res.status(400).send({ error: "Invalid id" })
+    }
 });
 
 app.listen(3000, () => console.log("Listening on port 3000"));
